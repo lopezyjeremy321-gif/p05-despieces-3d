@@ -1,0 +1,16 @@
+/* Mundo «taller relojero»: lino cálido, tinta marrón oscura, un solo acento rubí (el rubí de los pivotes). */
+:root{
+  /* capa 1: primitivos */
+  --c-linen:#ece4d6;--c-linen-2:#f4eee3;--c-walnut:#2a2018;--c-umber:#5a4b3c;--c-taupe:#8c7a66;--c-rule:#d6cab6;--c-wash:#e0d6c4;--c-ruby:#c1213a;--c-alert:#a3261b;
+  --c-night:#1b1611;--c-night-2:#231d17;--c-cream:#f1e8d8;--c-cream-2:#c2b49e;--c-bronze:#8a7a64;--c-night-rule:#3a3027;--c-night-wash:#2f261f;--c-ruby-2:#ff6b80;--c-alert-2:#ff9a7a;
+  /* capa 2: semánticos (claro) */
+  --bg:var(--c-linen);--panel:var(--c-linen-2);--ink:var(--c-walnut);--ink-2:var(--c-umber);--ink-3:var(--c-taupe);--line:var(--c-rule);--hover:var(--c-wash);
+  --accent:var(--c-ruby);--on-accent:#fff;--warn:var(--c-alert);--focus:var(--c-walnut);--scrim:rgba(244,238,227,.92);
+  --font-display:'Bodoni Moda','Didot',Georgia,serif;--font-body:'Jost','Futura',system-ui,sans-serif;--font-num:'Jost','Futura',system-ui,sans-serif;
+  --w-display:700;--w-num:700;--ls-display:-.005em;--r:3px;
+}
+:root[data-theme=dark]{
+  --bg:var(--c-night);--panel:var(--c-night-2);--ink:var(--c-cream);--ink-2:var(--c-cream-2);--ink-3:var(--c-bronze);--line:var(--c-night-rule);--hover:var(--c-night-wash);
+  --accent:var(--c-ruby-2);--on-accent:var(--c-night);--warn:var(--c-alert-2);--focus:var(--c-cream);--scrim:rgba(27,22,17,.9);
+}
+.title h1{font-style:normal}

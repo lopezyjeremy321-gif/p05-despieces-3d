@@ -1,0 +1,15 @@
+/* Mundo «plano hidráulico»: papel azul-gris, tinta marino, un solo acento naranja de señal. */
+:root{
+  /* capa 1: primitivos */
+  --p-paper:#dfe7ec;--p-paper-2:#e9eff3;--p-navy:#0f2236;--p-slate:#3d5164;--p-mist:#6d8294;--p-rule:#c4d0d9;--p-wash:#cfdce5;--p-signal:#ff6b2c;--p-alert:#b3260f;
+  --p-night:#0e1a26;--p-night-2:#122232;--p-ice:#e8f0f6;--p-ice-2:#a6b9c8;--p-steel:#5c7488;--p-night-rule:#263a4c;--p-night-wash:#1b3045;--p-signal-2:#ff7a40;--p-alert-2:#ff8f73;
+  /* capa 2: semánticos (claro) */
+  --bg:var(--p-paper);--panel:var(--p-paper-2);--ink:var(--p-navy);--ink-2:var(--p-slate);--ink-3:var(--p-mist);--line:var(--p-rule);--hover:var(--p-wash);
+  --accent:var(--p-signal);--on-accent:var(--p-navy);--warn:var(--p-alert);--focus:var(--p-navy);--scrim:rgba(233,239,243,.9);
+  --font-display:'Chakra Petch',system-ui,sans-serif;--font-body:'Chakra Petch',system-ui,sans-serif;--font-num:'Chakra Petch',system-ui,sans-serif;
+  --w-display:700;--w-num:700;--ls-display:.005em;--r:6px;
+}
+:root[data-theme=dark]{
+  --bg:var(--p-night);--panel:var(--p-night-2);--ink:var(--p-ice);--ink-2:var(--p-ice-2);--ink-3:var(--p-steel);--line:var(--p-night-rule);--hover:var(--p-night-wash);
+  --accent:var(--p-signal-2);--on-accent:var(--p-night);--warn:var(--p-alert-2);--focus:var(--p-ice);--scrim:rgba(14,26,38,.88);
+}

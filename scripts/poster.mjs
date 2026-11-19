@@ -1,0 +1,14 @@
+import path from 'node:path';
+import {createRequire} from 'node:module';
+import {pathToFileURL, fileURLToPath} from 'node:url';
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const {chromium} = createRequire(path.join(HERE, '..', 'teardown-base', 'node_modules', 'x.js'))('playwright');
+const [piece, t] = process.argv.slice(2);
+const browser = await chromium.launch({executablePath: 'D:/ClaudeBrain/cache/ms-playwright/chromium-1248/chrome-win64/chrome.exe', headless: true, args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader']});
+const page = await browser.newPage({viewport: {width: 1280, height: 800}});
+await page.goto(pathToFileURL(path.join(HERE, '..', 'dist', piece + '.html')).href + '?render&theme=light');
+await page.waitForFunction(() => window.SIM && window.SIM.gl);
+await page.evaluate(() => document.fonts.ready);
+await page.evaluate((x) => { window.seek(x); document.querySelector('.caption').style.display = 'none'; }, Number(t));
+await page.locator('#stage').screenshot({path: path.join(HERE, '..', 'assets', `poster-${piece}.jpg`), type: 'jpeg', quality: 72});
+await browser.close();

@@ -1,0 +1,6 @@
+node_modules/
+teardown-base/node_modules/
+.env
+*.log
+dist/*.tmp
+out/

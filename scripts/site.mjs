@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const R = path.resolve(import.meta.dirname, '..');
+const F = 'D:/ClaudeBrain/recursos/tipografias/woff2/google/';
+const face = (fam, w, f) => `@font-face{font-family:'${fam}';font-weight:${w};font-style:normal;font-display:block;src:url(data:font/woff2;base64,${fs.readFileSync(F + f).toString('base64')}) format('woff2')}`;
+const fonts = [face('Barlow Condensed', 700, 'BarlowCondensed-700.woff2'), face('Atkinson Hyperlegible', 400, 'AtkinsonHyperlegible-400.woff2'), face('Atkinson Hyperlegible', 700, 'AtkinsonHyperlegible-700.woff2')].join('');
+const out = path.join(R, 'site');
+fs.rmSync(out, {recursive: true, force: true});
+fs.mkdirSync(path.join(out, 'pieces'), {recursive: true});
+fs.mkdirSync(path.join(out, 'posters'), {recursive: true});
+fs.writeFileSync(path.join(out, 'index.html'), fs.readFileSync(path.join(R, 'site-src/index.html'), 'utf8').replace('/*FONTS*/', fonts));
+fs.copyFileSync(path.join(R, 'dist/pump.html'), path.join(out, 'pieces/pump.html'));
+fs.copyFileSync(path.join(R, 'dist/clock.html'), path.join(out, 'pieces/clock.html'));
+fs.copyFileSync(path.join(R, 'out/td/dist/v8-live.html'), path.join(out, 'pieces/v8.html'));
+for (const p of ['pump', 'clock', 'v8']) fs.copyFileSync(path.join(R, `assets/poster-${p}.jpg`), path.join(out, `posters/${p}.jpg`));
+fs.writeFileSync(path.join(out, 'vercel.json'), JSON.stringify({headers: [{source: '/(.*)', headers: [{key: 'X-Content-Type-Options', value: 'nosniff'}, {key: 'Referrer-Policy', value: 'no-referrer'}, {key: 'X-Frame-Options', value: 'SAMEORIGIN'}]}]}, null, 1));
+for (const f of ['index.html', 'pieces/pump.html', 'pieces/clock.html', 'pieces/v8.html']) console.log(f, fs.statSync(path.join(out, f)).size, 'bytes');

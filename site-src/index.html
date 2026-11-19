@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tres máquinas, abiertas · despieces 3D</title>
+<meta name="description" content="Despieces 3D interactivos con números reales: una bomba centrífuga, un reloj mecánico y un motor V8. Cada simulador es su propia portada.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<style>
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: E, tokens de espaciado ajustados tras el sloplint */
+/*FONTS*/
+:root{
+  /* capa 1 */
+  --k-paper:#efece6;--k-ink:#1b1a18;--k-ink-2:#4b4740;--k-rule:#cfc9bd;--k-pump:#ff6b2c;--k-clock:#c1213a;--k-v8:#b8860b;
+  --k-night:#151412;--k-bone:#ece8df;--k-bone-2:#b9b3a6;--k-night-rule:#34312c;--k-poster:#dfe7ec;--k-edge:rgba(27,26,24,.1);
+  /* capa 2 */
+  --bg:var(--k-paper);--ink:var(--k-ink);--ink-2:var(--k-ink-2);--rule:var(--k-rule);--focus:var(--k-ink);
+  --display:'Barlow Condensed','Arial Narrow',sans-serif;--body:'Atkinson Hyperlegible',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{--bg:var(--k-night);--ink:var(--k-bone);--ink-2:var(--k-bone-2);--rule:var(--k-night-rule);--focus:var(--k-bone)}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{overflow-x:clip;margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+a{color:inherit}
+.skip{position:absolute;left:8px;top:-60px;background:var(--ink);color:var(--bg);padding:8px 16px;z-index:10}
+.skip:focus{top:8px}
+header.bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px clamp(16px,3vw,40px);border-bottom:1px solid var(--rule)}
+header.bar h1{text-wrap:balance;margin:0;font:700 clamp(26px,3.4vw,40px)/1 var(--display);letter-spacing:.01em;text-transform:uppercase}
+nav{display:flex;gap:8px}
+nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;text-decoration:none;font-weight:700;font-size:16px;border-bottom:3px solid transparent}
+nav a:hover{border-color:var(--ink)}
+nav a[href="#bomba"]:hover{border-color:var(--k-pump)}nav a[href="#reloj"]:hover{border-color:var(--k-clock)}nav a[href="#v8"]:hover{border-color:var(--k-v8)}
+.cover{position:relative;background:var(--k-poster);overflow:hidden}
+.cover img,.cover iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;object-fit:cover}
+.cover img{transition:opacity .4s}.cover.live img{opacity:0;pointer-events:none}
+.cover::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px var(--k-edge)}
+.meta{max-width:68ch}
+.meta h2{text-wrap:balance;margin:0 0 .3em;font:700 clamp(40px,6vw,84px)/.92 var(--display);text-transform:uppercase;letter-spacing:.005em}
+.meta p{margin:0 0 1em;color:var(--ink-2)}
+.meta .nums{font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
+.go{display:inline-flex;align-items:center;min-height:48px;padding:0 20px;font-weight:700;text-decoration:none;border:2px solid var(--ink);margin-right:8px;margin-top:4px}
+.go:hover{background:var(--ink);color:var(--bg)}
+.go:active{transform:translateY(1px)}
+nav a:active{opacity:.7}
+/* 1 · bomba: el simulador ocupa el primer viewport, el texto va debajo en una sola línea de lectura */
+#bomba .cover{height:min(82vh,860px);min-height:460px;border-bottom:6px solid var(--k-pump)}
+#bomba .meta{padding:28px clamp(16px,3vw,40px) 56px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:8px 48px;max-width:none}
+#bomba .meta h2{grid-row:span 2}
+/* 2 · reloj: columna de texto fija a la izquierda, simulador alto a la derecha */
+#reloj{display:grid;grid-template-columns:minmax(280px,34%) minmax(0,1fr);border-bottom:1px solid var(--rule)}
+#reloj .meta{padding:48px clamp(16px,3vw,40px);position:sticky;top:0;align-self:start}
+#reloj .meta h2{border-top:8px solid var(--k-clock);padding-top:16px}
+#reloj .cover{height:max(88vh,640px)}
+/* 3 · V8: texto arriba, simulador 16:9 desplazado, con aviso de procedencia */
+#v8{padding:56px clamp(16px,3vw,40px) 72px}
+#v8 .meta h2{color:var(--ink)}
+#v8 .meta .honest{border-top:4px solid var(--k-v8);padding-top:8px;color:var(--ink);font-weight:700}
+#v8 .cover{aspect-ratio:16/9;max-width:1180px;margin-left:auto;margin-top:24px;width:100%}
+footer{border-top:1px solid var(--rule);padding:32px clamp(16px,3vw,40px) 48px;font-size:15.5px;color:var(--ink-2);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+footer h2{margin:0 0 8px;font:700 15px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+footer p{margin:0}
+@media (max-width:860px){
+  #bomba .meta{grid-template-columns:1fr}
+  #reloj{grid-template-columns:1fr}
+  #reloj .meta{position:static;padding-bottom:20px}
+  #reloj .cover{height:84vh}
+  #bomba .cover{height:78vh}
+  nav a{padding:0 8px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#bomba">Saltar al primer simulador</a>
+<header class="bar">
+  <h1>Tres máquinas, abiertas</h1>
+  <nav aria-label="Piezas"><a href="#bomba">Bomba</a><a href="#reloj">Reloj</a><a href="#v8">Motor V8</a></nav>
+</header>
+<main>
+<section id="bomba" aria-labelledby="t-bomba">
+  <div class="cover" data-src="pieces/pump.html" data-title="Simulador 3D de una bomba centrífuga"><img src="posters/pump.jpg" alt="Bomba centrífuga en vista de tres cuartos: voluta azul, impulsor de bronce y eje" width="1280" height="800" fetchpriority="high"></div>
+  <div class="meta">
+    <h2 id="t-bomba">Bomba centrífuga</h2>
+    <p class="nums">50 m³/h a 53 m con 10 kW y 72 % de rendimiento. Cierra la válvula y mira cómo el punto de operación recorre la curva; baja el nivel de aspiración hasta que el margen NPSH se agote y aparezca la cavitación.</p>
+    <p><a class="go" href="pieces/pump.html">Abrir a pantalla completa</a></p>
+  </div>
+</section>
+
+<section id="reloj" aria-labelledby="t-reloj">
+  <div class="meta">
+    <h2 id="t-reloj">Reloj mecánico</h2>
+    <p class="nums">Un volante de 3 Hz, 21 600 alternancias por hora y un tren que reduce 5 760 : 1. Frena el tiempo a ×0,05 para ver cómo la áncora suelta cada diente, o acelera ×1 260 para ver la relación 12:1 entre horaria y minutero.</p>
+    <p><a class="go" href="pieces/clock.html">Abrir a pantalla completa</a></p>
+  </div>
+  <div class="cover" data-src="pieces/clock.html" data-title="Simulador 3D de un movimiento de reloj mecánico"><img src="posters/clock.jpg" alt="Movimiento de reloj mecánico con ruedas doradas, espiral rojo y esfera esqueleto" width="1280" height="800" loading="lazy"></div>
+</section>
+
+<section id="v8" aria-labelledby="t-v8">
+  <div class="meta">
+    <h2 id="t-v8">Motor V8</h2>
+    <p class="honest">Esta pieza no es mía: es el ejemplo que trae la skill <i>teardown</i> (elvarofficial/teardown, licencia MIT). Está aquí como la referencia de la que partieron la bomba y el reloj, que sí son código y geometría propios.</p>
+    <p><a class="go" href="pieces/v8.html">Abrir a pantalla completa</a></p>
+  </div>
+  <div class="cover" data-src="pieces/v8.html" data-title="Simulador 3D de un motor V8 (ejemplo de la skill teardown)"><img src="posters/v8.jpg" alt="Motor V8 con cilindros de cristal en el simulador de ejemplo de teardown" width="1280" height="720" loading="lazy"></div>
+</section>
+</main>
+<footer>
+  <div><h2>Qué es real</h2><p>La bomba y el reloj salen de fórmulas (altura de Euler, leyes de afinidad, NPSH; relación de engranajes y frecuencia del escape). Los coeficientes de pérdidas son de un modelo propio, no de un fabricante.</p></div>
+  <div><h2>Qué no hay</h2><p>Ningún modelo 3D de terceros: toda la geometría de la bomba y el reloj se genera en código. Los datos son de demostración.</p></div>
+  <div><h2>Créditos</h2><p>Motor del V8 y base de captura: elvarofficial/teardown (MIT), con partes de whaleyxbt/claude-motion (MIT). Tipografías: Chakra Petch, Bodoni Moda, Jost, Barlow Condensed y Atkinson Hyperlegible (licencia OFL). Three.js (MIT).</p></div>
+</footer>
+<script>
+(function(){
+  var covers=[].slice.call(document.querySelectorAll('.cover'));
+  function activate(c){
+    if(c.dataset.on)return;c.dataset.on='1';
+    var f=document.createElement('iframe');
+    f.title=c.dataset.title;f.src=c.dataset.src;
+    f.addEventListener('load',function(){c.classList.add('live')});
+    c.insertBefore(f,c.firstChild);
+  }
+  function run(){
+    if(!('IntersectionObserver' in window)){covers.forEach(activate);return}
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){activate(e.target);io.unobserve(e.target)}})},{rootMargin:'150px'});
+    covers.forEach(function(c){io.observe(c)});
+  }
+  if(document.readyState==='complete')setTimeout(run,1200);else addEventListener('load',function(){setTimeout(run,1200)});
+})();
+</script>
+</body>
+</html>
